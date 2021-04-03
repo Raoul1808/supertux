@@ -1,6 +1,5 @@
 //  SuperTux
-//  Copyright (C) 2004 Tobas Glaesser <tobi.web@gmx.de>
-//  Copyright (C) 2006 Matthias Braun <matze@braunis.de>
+//  Copyright (C) 2021 Raoul1808 <raoulthegeek@gmail.com>
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,22 +14,35 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_OPTIONS_MENU_HPP
-#define HEADER_SUPERTUX_SUPERTUX_MENU_OPTIONS_MENU_HPP
+#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_OPTIONS_AUDIO_MENU_HPP
+#define HEADER_SUPERTUX_SUPERTUX_MENU_OPTIONS_AUDIO_MENU_HPP
 
 #include "gui/menu.hpp"
 
-class OptionsMenu final : public Menu
+class OptionsAudioMenu final : public Menu
 {
 public:
-  OptionsMenu(bool complete);
-  virtual ~OptionsMenu();
+  OptionsAudioMenu();
 
   void menu_action(MenuItem& item) override;
 
 private:
-  OptionsMenu(const OptionsMenu&) = delete;
-  OptionsMenu& operator=(const OptionsMenu&) = delete;
+  enum MenuIDs {
+    MNID_SOUND,
+    MNID_MUSIC,
+    MNID_SOUND_VOLUME,
+    MNID_MUSIC_VOLUME
+  };
+
+  int next_sound_volume;
+  int next_music_volume;
+
+  std::vector<std::string> sound_volumes;
+  std::vector<std::string> music_volumes;
+
+private:
+  OptionsAudioMenu(const OptionsAudioMenu&) = delete;
+  OptionsAudioMenu& operator=(const OptionsAudioMenu&) = delete;
 };
 
 #endif

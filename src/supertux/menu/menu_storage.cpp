@@ -39,6 +39,9 @@
 #include "supertux/menu/language_menu.hpp"
 #include "supertux/menu/main_menu.hpp"
 #include "supertux/menu/options_menu.hpp"
+#include "supertux/menu/options_audio_menu.hpp"
+#include "supertux/menu/options_graphics_menu.hpp"
+#include "supertux/menu/options_other_menu.hpp"
 #include "supertux/menu/particle_editor_menu.hpp"
 #include "supertux/menu/particle_editor_save_as.hpp"
 #include "supertux/menu/particle_editor_open.hpp"
@@ -81,6 +84,15 @@ MenuStorage::create(MenuId menu_id)
 
     case OPTIONS_MENU:
       return std::unique_ptr<Menu>(new OptionsMenu(true));
+
+    case OPTIONS_AUDIO_MENU:
+      return std::make_unique<OptionsAudioMenu>();
+
+    case OPTIONS_GRAPHICS_MENU:
+      return std::make_unique<OptionsGraphicsMenu>();
+
+    case OPTIONS_OTHER_MENU:
+      return std::make_unique<OptionsOtherMenu>();
 
     case INGAME_OPTIONS_MENU:
       return std::unique_ptr<Menu>(new OptionsMenu(false));

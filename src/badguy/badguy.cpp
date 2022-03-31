@@ -546,9 +546,9 @@ BadGuy::kill_fall()
     remove_me();
   } else {
     SoundManager::current()->play("sounds/fall.wav", get_pos());
-    m_physic.set_velocity_y(0);
-    m_physic.set_acceleration_y(0);
-    m_physic.enable_gravity(true);
+    m_physic.set_velocity_y(-50);
+//    m_physic.set_acceleration_y(0);
+    m_physic.enable_gravity(false);
     set_state(STATE_FALLING);
 
     // Set the badguy layer to be the foremost, so that

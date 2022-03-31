@@ -565,7 +565,7 @@ WorldMap::draw_status(DrawingContext& context)
           }
           }
         */
-        level.get_statistics().draw_worldmap_info(context, level.get_target_time());
+//        level.get_statistics().draw_worldmap_info(context, level.get_target_time());
         break;
       }
     }

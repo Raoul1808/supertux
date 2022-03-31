@@ -16,7 +16,7 @@
 
 #include "object/growup.hpp"
 
-#include <math.h>
+#include <algorithm>
 
 #include "audio/sound_manager.hpp"
 #include "math/util.hpp"
@@ -62,8 +62,11 @@ GrowUp::collision_solid(const CollisionHit& hit)
 {
   if (hit.top)
     physic.set_velocity_y(0);
-  if (hit.bottom && physic.get_velocity_y() > 0)
-    physic.set_velocity_y(0);
+  if (hit.bottom) // && physic.get_velocity_y() > 0
+  {
+      float bounce_speed = -physic.get_velocity_y()*0.8f;
+      physic.set_velocity_y(std::min(-450.0f, bounce_speed));
+  }
   if (hit.left || hit.right) {
     physic.set_velocity_x(-physic.get_velocity_x());
   }

@@ -18,6 +18,7 @@
 
 #include "sprite/sprite.hpp"
 #include "supertux/sector.hpp"
+#include "math/random.hpp"
 
 namespace{
   static const float CAPTAIN_WALK_SPEED = 100;
@@ -30,6 +31,8 @@ CaptainSnowball::CaptainSnowball(const ReaderMapping& reader)
   walk_speed = BOARDING_SPEED;
   max_drop_height = -1;
   m_physic.set_velocity_y(-400);
+  m_ground_update_speed = gameRandom.rand(1, 8);
+  m_air_update_speed = (gameRandom.rand(10) == 5 ? m_ground_update_speed * gameRandom.randf(0.5f, 1.f) : gameRandom.randf(0.1f, 2.f));
 }
 
 bool
@@ -65,7 +68,7 @@ CaptainSnowball::active_update(float dt_sec)
     walk_speed = BOARDING_SPEED;
     m_physic.set_velocity_x(m_dir == Direction::LEFT ? -walk_speed : walk_speed);
   }
-  WalkingBadguy::active_update(dt_sec);
+  WalkingBadguy::active_update(dt_sec * (on_ground() ? m_ground_update_speed : m_air_update_speed));
 }
 
 void

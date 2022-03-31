@@ -38,6 +38,8 @@ protected:
 private:
   CaptainSnowball(const CaptainSnowball&) = delete;
   CaptainSnowball& operator=(const CaptainSnowball&) = delete;
+  double m_ground_update_speed;
+  double m_air_update_speed;
 };
 
 #endif

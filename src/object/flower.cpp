@@ -21,6 +21,8 @@
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 #include "supertux/flip_level_transformer.hpp"
+#include "supertux/sector.hpp"
+#include "object/coin_explode.hpp"
 
 Flower::Flower(BonusType _type) :
   type(_type),
@@ -75,6 +77,11 @@ Flower::collision(GameObject& other, const CollisionHit& )
   Player* player = dynamic_cast<Player*>(&other);
   if (!player)
     return ABORT_MOVE;
+
+  for (int i = 0; i < 5; i++)
+      Sector::get().add<CoinExplode>(get_pos());
+  remove_me();
+  return ABORT_MOVE;
 
   if (!player->add_bonus(type, true))
     return FORCE_MOVE;

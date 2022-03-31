@@ -473,7 +473,8 @@ std::string
 Statistics::coins_to_string(int coins, int total_coins)
 {
   std::ostringstream os;
-  os << std::min(std::min(coins, total_coins), 999) << "/" << std::min(total_coins, 999);
+//  os << std::min(std::min(coins, total_coins), 999) << "/" << std::min(total_coins, 999);
+  os << "None!/" << std::min(total_coins, 999);
   return os.str();
 }
 
@@ -481,7 +482,8 @@ std::string
 Statistics::frags_to_string(int badguys, int total_badguys)
 {
   std::ostringstream os;
-  os << std::min(std::min(badguys, total_badguys), 999) << "/" << std::min(total_badguys, 999);
+//  os << std::min(std::min(badguys, total_badguys), 999) << "/" << std::min(total_badguys, 999);
+  os << std::min(std::min(badguys, total_badguys), 999) << " - " << std::min(std::min(badguys, total_badguys), 999) << "/" << std::min(total_badguys, 999);
   return os.str();
 }
 
@@ -494,14 +496,16 @@ Statistics::time_to_string(float time)
   int cscs = (time_csecs % 6000) % 100;
 
   std::ostringstream os;
-  if (time == 0.0f)
-  {
-    os << "--:--:--";
-  }
-  else
-  {
-    os << std::setw(2) << std::setfill('0') << mins << ":" << std::setw(2) << std::setfill('0') << secs << "." << std::setw(2) << std::setfill('0') << cscs;
-  }
+//  if (time == 0.0f)
+//  {
+//    os << "--:--:--";
+//  }
+//  else
+//  {
+//    os << std::setw(2) << std::setfill('0') << mins << ":" << std::setw(2) << std::setfill('0') << secs << "." << std::setw(2) << std::setfill('0') << cscs;
+//  }
+
+  os << "00:00:00.01 WR";
 
   return os.str();
 }
@@ -549,7 +553,8 @@ std::string
 Statistics::secrets_to_string(int secrets, int total_secrets)
 {
   std::ostringstream os;
-  os << std::min(secrets, 999) << "/" << std::min(total_secrets, 999);
+//  os << std::min(secrets, 999) << "/" << std::min(total_secrets, 999);
+  os << ":^)";
   return os.str();
 }
 

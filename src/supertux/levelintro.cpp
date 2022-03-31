@@ -124,7 +124,7 @@ LevelIntro::draw(Compositor& compositor)
 {
   auto& context = compositor.make_context();
 
-  const Statistics& stats = m_level.m_stats;
+//  const Statistics& stats = m_level.m_stats;
   int py = static_cast<int>(static_cast<float>(context.get_height()) / 2.0f - Resources::normal_font->get_height() / 2.0f);
 
   context.set_ambient_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
@@ -168,34 +168,34 @@ LevelIntro::draw(Compositor& compositor)
 
   py += 32;
 
-  if (m_best_level_statistics)
-  {
-    context.color().draw_center_text(Resources::normal_font,
-                                     std::string("- ") + _("Best Level Statistics") + std::string(" -"),
-                                     Vector(0, static_cast<float>(py)),
-                                     LAYER_FOREGROUND1, s_stat_hdr_color);
+//  if (m_best_level_statistics)
+//  {
+//    context.color().draw_center_text(Resources::normal_font,
+//                                     std::string("- ") + _("Best Level Statistics") + std::string(" -"),
+//                                     Vector(0, static_cast<float>(py)),
+//                                     LAYER_FOREGROUND1, s_stat_hdr_color);
+//
+//    py += static_cast<int>(Resources::normal_font->get_height());
 
-    py += static_cast<int>(Resources::normal_font->get_height());
+//    draw_stats_line(context, py, _("Coins"),
+//                    Statistics::coins_to_string(m_best_level_statistics->get_coins(), stats.m_total_coins),
+//                    m_best_level_statistics->get_coins() >= stats.m_total_coins);
+//    draw_stats_line(context, py, _("Badguys killed"),
+//                    Statistics::frags_to_string(m_best_level_statistics->get_badguys(), stats.m_total_badguys),
+//                    m_best_level_statistics->get_badguys() >= stats.m_total_badguys);
+//    draw_stats_line(context, py, _("Secrets"),
+//                    Statistics::secrets_to_string(m_best_level_statistics->get_secrets(), stats.m_total_secrets),
+//                    m_best_level_statistics->get_secrets() >= stats.m_total_secrets);
 
-    draw_stats_line(context, py, _("Coins"),
-                    Statistics::coins_to_string(m_best_level_statistics->get_coins(), stats.m_total_coins),
-                    m_best_level_statistics->get_coins() >= stats.m_total_coins);
-    draw_stats_line(context, py, _("Badguys killed"),
-                    Statistics::frags_to_string(m_best_level_statistics->get_badguys(), stats.m_total_badguys),
-                    m_best_level_statistics->get_badguys() >= stats.m_total_badguys);
-    draw_stats_line(context, py, _("Secrets"),
-                    Statistics::secrets_to_string(m_best_level_statistics->get_secrets(), stats.m_total_secrets),
-                    m_best_level_statistics->get_secrets() >= stats.m_total_secrets);
+//    bool targetTimeBeaten = m_level.m_target_time == 0.0f || (m_best_level_statistics->get_time() != 0.0f && m_best_level_statistics->get_time() < m_level.m_target_time);
+//    draw_stats_line(context, py, _("Best time"),
+//                    Statistics::time_to_string(m_best_level_statistics->get_time()), targetTimeBeaten);
 
-    bool targetTimeBeaten = m_level.m_target_time == 0.0f || (m_best_level_statistics->get_time() != 0.0f && m_best_level_statistics->get_time() < m_level.m_target_time);
-    draw_stats_line(context, py, _("Best time"),
-                    Statistics::time_to_string(m_best_level_statistics->get_time()), targetTimeBeaten);
-
-    if (m_level.m_target_time != 0.0f) {
-      draw_stats_line(context, py, _("Level target time"),
-                      Statistics::time_to_string(m_level.m_target_time), targetTimeBeaten);
-    }
-  }
+//    if (m_level.m_target_time != 0.0f) {
+//      draw_stats_line(context, py, _("Level target time"),
+//                      Statistics::time_to_string(m_level.m_target_time), targetTimeBeaten);
+//    }
+//  }
   py += 32;
   if (!m_level.m_note.empty()) {
     context.color().draw_center_text(Resources::normal_font, m_level.m_note, Vector(0, py), LAYER_FOREGROUND1);

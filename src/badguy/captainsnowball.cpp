@@ -35,6 +35,18 @@ CaptainSnowball::CaptainSnowball(const ReaderMapping& reader)
   m_air_update_speed = (gameRandom.rand(10) == 5 ? m_ground_update_speed * gameRandom.randf(0.5f, 1.f) : gameRandom.randf(0.1f, 2.f));
 }
 
+CaptainSnowball::CaptainSnowball(const Vector &pos, const Vector &init_velocity)
+  : WalkingBadguy(pos, "images/creatures/snowball/cpt-snowball.sprite", "left", "right")
+{
+  walk_speed = BOARDING_SPEED;
+  max_drop_height = -1;
+  m_physic.set_velocity_y(-400);
+  m_ground_update_speed = gameRandom.rand(1, 8);
+  m_air_update_speed = (gameRandom.rand(10) == 5 ? m_ground_update_speed * gameRandom.randf(0.5f, 1.f) : gameRandom.randf(0.1f, 2.f));
+  m_physic.set_velocity(init_velocity);
+  set_name("CaptainExplosionball");
+}
+
 bool
 CaptainSnowball::might_climb(int width, int height) const
 {

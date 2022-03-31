@@ -26,6 +26,7 @@
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 #include "supertux/sector.hpp"
+#include "badguy/captainsnowball.hpp"
 
 Explosion::Explosion(const Vector& pos, float p_push_strength,
     int p_num_particles) :
@@ -117,6 +118,23 @@ Explosion::explode()
       }
     }
   }
+
+
+
+    // Code from coin_explode.cpp
+    float mag = 100.0f; // madnitude that coins are to be thrown
+    float rand = 30.0f; // max variation to be subtracted from magnitide
+
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(2.5, -4.5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(2, -5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(1.5, -5.5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(1, -6) * (mag+gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(0.5, -6.5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(-2.5, -4.5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(-2, -5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(-1.5, -5.5) * (mag - gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(-1, -6) * (mag+gameRandom.randf(rand)));
+    Sector::get().add<CaptainSnowball>(m_col.m_bbox.get_middle(), Vector(-0.5, -6.5) * (mag - gameRandom.randf(rand)));
 }
 
 void
@@ -153,7 +171,7 @@ Explosion::collision(GameObject& other, const CollisionHit& )
   }
 
   auto badguy = dynamic_cast<BadGuy*>(&other);
-  if (badguy != nullptr) {
+  if (badguy != nullptr && badguy->get_name() != "CaptainExplosionball") {
     badguy->kill_fall();
   }
 

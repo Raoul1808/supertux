@@ -24,6 +24,7 @@
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 #include "util/reader_mapping.hpp"
+#include "math/random.hpp"
 
 /* Trampoline will accelerate Tux to to VY_INITIAL, if
  * he jumps on it to VY_MIN. */
@@ -109,6 +110,7 @@ Trampoline::collision(GameObject& other, const CollisionHit& hit)
             vy = VY_INITIAL - 40;
         }
         player->get_physic().set_velocity_y(vy);
+        player->get_physic().set_velocity_x(gameRandom.randf(-5., 5.)*100);
         SoundManager::current()->play(TRAMPOLINE_SOUND, get_pos());
         m_sprite->set_action("swinging", 1);
         return FORCE_MOVE;

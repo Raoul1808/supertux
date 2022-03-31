@@ -211,7 +211,6 @@ Coin::collision(GameObject& other, const CollisionHit& )
             if (gameRandom.rand(4) == 3)
             {
                 // Do the funny
-                std::cout << "a" << "\n";
                 Vector vec;
                 vec.x = gameRandom.rand(-5, 5)*100;
                 vec.y = -250;

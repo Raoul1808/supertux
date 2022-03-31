@@ -19,6 +19,7 @@
 #include "audio/sound_manager.hpp"
 #include "audio/sound_source.hpp"
 #include "editor/editor.hpp"
+#include "math/random.hpp"
 #include "object/bouncy_coin.hpp"
 #include "object/player.hpp"
 #include "object/tilemap.hpp"
@@ -36,7 +37,8 @@ Coin::Coin(const Vector& pos) :
   m_add_path(false),
   m_physic(),
   m_collect_script(),
-  m_starting_node(0)
+  m_starting_node(0),
+  m_washit(false)
 {
   SoundManager::current()->preload("sounds/coin.wav");
 }
@@ -49,7 +51,8 @@ Coin::Coin(const ReaderMapping& reader) :
   m_add_path(false),
   m_physic(),
   m_collect_script(),
-  m_starting_node(0)
+  m_starting_node(0),
+  m_washit(false)
 {
   reader.get("starting-node", m_starting_node, 0);
 
@@ -202,7 +205,27 @@ Coin::collision(GameObject& other, const CollisionHit& )
   if (player == nullptr)
     return ABORT_MOVE;
   if (m_col.get_bbox().contains(player->get_bbox().grown(-0.1f)))
-    collect();
+      {
+      if (!m_washit)
+          {
+            if (gameRandom.rand(4) == 3)
+            {
+                // Do the funny
+                std::cout << "a" << "\n";
+                Vector vec;
+                vec.x = gameRandom.rand(-5, 5)*100;
+                vec.y = -250;
+                player->add_velocity(vec);
+            }
+          }
+//    collect();
+        m_washit = true;
+      }
+  else
+      {
+        m_washit = false;
+
+      }
   return ABORT_MOVE;
 }
 

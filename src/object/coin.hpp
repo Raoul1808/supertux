@@ -58,6 +58,7 @@ private:
   bool m_add_path;
   Physic m_physic;
   std::string m_collect_script;
+  bool m_washit;
 
   int m_starting_node;
 

@@ -45,6 +45,7 @@ class ItemLabel;
 class ItemPaths;
 class ItemScript;
 class ItemScriptLine;
+class ItemList;
 class ItemStringSelect;
 class ItemTextField;
 class ItemToggle;
@@ -69,6 +70,8 @@ public:
   virtual void refresh() {}
 
   virtual void on_window_resize();
+
+  virtual void event(const SDL_Event& event);
 
   ItemHorizontalLine& add_hl();
   ItemLabel& add_label(const std::string& text);
@@ -102,6 +105,7 @@ public:
   ItemStringArray& add_string_array(const std::string& text, std::vector<std::string>& items, int id = -1);
   ItemImages& add_images(const std::string& image_path, int max_image_width = 0, int max_image_height = 0, int id = -1);
   ItemImages& add_images(const std::vector<std::string>& image_paths, int max_image_width = 0, int max_image_height = 0, int id = -1);
+  ItemList& add_list(const std::string& text, const std::vector<std::string>& items, std::string* value_ptr, int id = -1);
 
   void process_input(const Controller& controller);
 
@@ -119,8 +123,6 @@ public:
   void draw(DrawingContext& context);
   Vector get_center_pos() const { return m_pos; }
   void set_center_pos(float x, float y);
-
-  void event(const SDL_Event& event);
 
   float get_width() const;
   float get_height() const;

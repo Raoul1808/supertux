@@ -75,7 +75,11 @@ enum OptionsMenuIDs {
   MNID_CONFIRMATION_DIALOG,
   MNID_PAUSE_ON_FOCUSLOSS,
   MNID_CUSTOM_CURSOR,
-  MNID_MOBILE_CONTROLS
+#ifndef __EMSCRIPTEN__
+  MNID_RELEASE_CHECK,
+#endif
+  MNID_MOBILE_CONTROLS,
+  MNID_MOBILE_CONTROLS_SCALE
 };
 
 OptionsMenu::OptionsMenu(bool complete) :
@@ -86,13 +90,15 @@ OptionsMenu::OptionsMenu(bool complete) :
   next_vsync(0),
   next_sound_volume(0),
   next_music_volume(0),
+  m_next_mobile_controls_scale(0),
   magnifications(),
   aspect_ratios(),
   window_resolutions(),
   resolutions(),
   vsyncs(),
   sound_volumes(),
-  music_volumes()
+  music_volumes(),
+  m_mobile_controls_scales()
 {
   add_label(_("Options"));
   add_hl();
@@ -385,6 +391,9 @@ OptionsMenu::OptionsMenu(bool complete) :
   aspect.set_help(_("Adjust the aspect ratio"));
 #endif
 
+  MenuItem& video_system_menu = add_submenu(_("Change Video System"), MenuStorage::MenuId::VIDEO_SYSTEM_MENU);
+  video_system_menu.set_help(_("Change video system used to render graphics"));
+
   if (SoundManager::current()->is_audio_enabled())
   {
     add_toggle(MNID_SOUND, _("Sound"), &g_config->sound_enabled)
@@ -422,6 +431,14 @@ OptionsMenu::OptionsMenu(bool complete) :
 
   add_toggle(MNID_MOBILE_CONTROLS, _("On-screen controls"), &g_config->mobile_controls)
       .set_help(_("Toggle on-screen controls for mobile devices"));
+  m_mobile_controls_scales.clear();
+  for (unsigned i = 50; i <= 300; i+=25)
+  {
+    m_mobile_controls_scales.push_back(std::to_string(i) + "%");
+    if (i == static_cast<unsigned>(g_config->m_mobile_controls_scale * 100))
+      m_next_mobile_controls_scale = (i - 50) / 25;
+  }
+  add_string_select(MNID_MOBILE_CONTROLS_SCALE, _("On-screen controls scale"), &m_next_mobile_controls_scale, m_mobile_controls_scales);
 
   MenuItem& enable_transitions = add_toggle(MNID_TRANSITIONS, _("Enable transitions"), &g_config->transitions_enabled);
   enable_transitions.set_help(_("Enable screen transitions and smooth menu animation"));
@@ -444,6 +461,10 @@ OptionsMenu::OptionsMenu(bool complete) :
   add_toggle(MNID_PAUSE_ON_FOCUSLOSS, _("Pause on focus loss"), &g_config->pause_on_focusloss)
     .set_help(_("Automatically pause the game when the window loses focus"));
   add_toggle(MNID_CUSTOM_CURSOR, _("Use custom mouse cursor"), &g_config->custom_mouse_cursor).set_help(_("Whether the game renders its own cursor or uses the system's cursor"));
+#ifndef __EMSCRIPTEN__
+  add_toggle(MNID_RELEASE_CHECK, _("Check for new releases"), &g_config->do_release_check)
+    .set_help(_("Allows the game to perform checks for new SuperTux releases on startup and notify if any found."));
+#endif
 
   add_submenu(_("Integrations and presence"), MenuStorage::INTEGRATIONS_MENU)
       .set_help(_("Manage whether SuperTux should display the levels you play on your social media profiles (Discord)"));
@@ -639,6 +660,13 @@ OptionsMenu::menu_action(MenuItem& item)
 
     case MNID_CUSTOM_CURSOR:
       SDL_ShowCursor(g_config->custom_mouse_cursor ? 0 : 1);
+      break;
+
+    case MNID_MOBILE_CONTROLS_SCALE:
+      if (sscanf(m_mobile_controls_scales[m_next_mobile_controls_scale].c_str(), "%f", &g_config->m_mobile_controls_scale) == EOF)
+        g_config->m_mobile_controls_scale = 1; // if sscanf fails revert to default scale
+      else
+        g_config->m_mobile_controls_scale /= 100.0f;
       break;
 
     default:

@@ -69,6 +69,7 @@ Config::Config() :
   keyboard_config(),
   joystick_config(),
   mobile_controls(SDL_GetNumTouchDevices() > 0),
+  m_mobile_controls_scale(1),
   addons(),
   developer_mode(false),
   christmas_mode(false),
@@ -76,10 +77,16 @@ Config::Config() :
   confirmation_dialog(false),
   pause_on_focusloss(true),
   custom_mouse_cursor(true),
+#ifdef __EMSCRIPTEN__
+  do_release_check(false),
+#else
+  do_release_check(true),
+#endif
 #ifdef ENABLE_DISCORD
   enable_discord(false),
 #endif
   hide_editor_levelnames(false),
+  notifications(),
   menubackcolor(ColorScheme::Menu::back_color),
   menufrontcolor(ColorScheme::Menu::front_color),
   menuhelpbackcolor(ColorScheme::Menu::help_back_color),
@@ -161,6 +168,7 @@ Config::load()
   config_mapping.get("confirmation_dialog", confirmation_dialog);
   config_mapping.get("pause_on_focusloss", pause_on_focusloss);
   config_mapping.get("custom_mouse_cursor", custom_mouse_cursor);
+  config_mapping.get("do_release_check", do_release_check);
 
   boost::optional<ReaderMapping> config_integrations_mapping;
   if (config_mapping.get("integrations", config_integrations_mapping))
@@ -169,6 +177,30 @@ Config::load()
 #ifdef ENABLE_DISCORD
     config_integrations_mapping->get("enable_discord", enable_discord);
 #endif
+  }
+
+  boost::optional<ReaderCollection> config_notifications_mapping;
+  if (config_mapping.get("notifications", config_notifications_mapping))
+  {
+    for (auto const& notification_node : config_notifications_mapping->get_objects())
+    {
+      if (notification_node.get_name() == "notification")
+      {
+        auto notification = notification_node.get_mapping();
+
+        std::string id;
+        bool disabled = false;
+        if (notification.get("id", id) &&
+            notification.get("disabled", disabled))
+        {
+          notifications.push_back({id, disabled});
+        }
+      }
+      else
+      {
+        log_warning << "Unknown token in config file: " << notification_node.get_name() << std::endl;
+      }
+    }
   }
 
   // menu colors
@@ -296,6 +328,7 @@ Config::load()
     }
 
     config_control_mapping->get("mobile_controls", mobile_controls, SDL_GetNumTouchDevices() > 0);
+    config_control_mapping->get("mobile_controls_scale", m_mobile_controls_scale, 1);
   }
 
   boost::optional<ReaderCollection> config_addons_mapping;
@@ -349,6 +382,7 @@ Config::save()
   writer.write("confirmation_dialog", confirmation_dialog);
   writer.write("pause_on_focusloss", pause_on_focusloss);
   writer.write("custom_mouse_cursor", custom_mouse_cursor);
+  writer.write("do_release_check", do_release_check);
 
   writer.start_list("integrations");
   {
@@ -358,6 +392,16 @@ Config::save()
 #endif
   }
   writer.end_list("integrations");
+
+  writer.start_list("notifications");
+  for (const auto& notification : notifications)
+  {
+    writer.start_list("notification");
+    writer.write("id", notification.id);
+    writer.write("disabled", notification.disabled);
+    writer.end_list("notification");
+  }
+  writer.end_list("notifications");
 
   writer.write("editor_autosave_frequency", editor_autosave_frequency);
 
@@ -435,6 +479,7 @@ Config::save()
     writer.end_list("joystick");
 
     writer.write("mobile_controls", mobile_controls);
+    writer.write("mobile_controls_scale", m_mobile_controls_scale);
   }
   writer.end_list("control");
 
